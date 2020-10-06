@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: Galaxy Europe
+  description: Remap 999:999 (uid:gid) to Galaxy user/group as needed by our network configuration
+  company: Galaxy Europe
+  license: GPL-3.0
+  min_ansible_version: 2.5
+  role_name: autoupdates
+  platforms:
+  - name: EL
+    versions:
+    - 7
+    - 8
+  galaxy_tags:
+  - system
+dependencies: []
+allow_duplicates: yes
