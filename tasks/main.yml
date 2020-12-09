@@ -1,15 +1,6 @@
 ---
-- name: Search for 999 in /etc/passwd
-  command: grep "999" /etc/passwd
-  ignore_errors: yes
-  register: check_passwd
-  changed_when: no
-
-- debug:
-    var: check_passwd
-
 - name: Search for 999 in /etc/group
-  command: grep "999" /etc/group
+  command: grep ":999:" /etc/group
   ignore_errors: yes
   register: check_group
   changed_when: no
@@ -17,10 +8,31 @@
 - debug:
     var: check_group
 
-- name: Include CentOS8 tasks
-  include_tasks: centos8.yml
-  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '8'
+- lineinfile:
+    path: /etc/group
+    regexp:  "^{{ check_group.stdout }}"
+    line: "{{ check_group.stdout | regex_replace('999', '500') }}"
+  when: 'not ansible_check_mode and check_group.rc == 0'
 
-- name: Include CentOS7 tasks
-  include_tasks: centos7.yml
-  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+- command: "find / -gid 999 -exec chgrp 500 '{}' +"
+  ignore_errors: yes
+  when: check_group.rc == 0
+
+- name: Search for 999 in /etc/passwd
+  command: grep ":999:" /etc/passwd
+  ignore_errors: yes
+  register: check_passwd
+  changed_when: no
+
+- debug:
+    var: check_passwd
+
+- lineinfile:
+    path: /etc/passwd
+    regexp: "^{{ check_passwd.stdout }}"
+    line: "{{ check_passwd.stdout | regex_replace('999', '500') }}"
+  when: 'not ansible_check_mode and check_passwd.rc == 0'
+
+- command: "find / -uid 999 -exec chown 500 '{}' +"
+  ignore_errors: yes
+  when: check_passwd.rc == 0
