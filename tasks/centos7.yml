@@ -29,7 +29,7 @@
   ignore_errors: yes
   when: check_input.rc == 0
 
-- name: Check for polkitd
+- name: Check for polkitd user
   command: grep -Fxq "polkitd:x:999" /etc/passwd
   ignore_errors: yes
   register: check_polkitd

@@ -20,7 +20,7 @@
   ignore_errors: yes
   when: check_input.rc == 0
 
-- name: Check for coredump
+- name: Check for coredump user
   command: grep -Fxq "systemd-coredump:x:999:997:systemd Core Dumper:/:/sbin/nologin" /etc/passwd
   ignore_errors: yes
   register: check_coredump

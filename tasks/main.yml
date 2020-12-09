@@ -1,8 +1,26 @@
 ---
+- name: Search for 999 in /etc/passwd
+  command: grep "999" /etc/passwd
+  ignore_errors: yes
+  register: check_passwd
+  changed_when: no
+
+- debug:
+    var: check_passwd
+
+- name: Search for 999 in /etc/group
+  command: grep "999" /etc/group
+  ignore_errors: yes
+  register: check_group
+  changed_when: no
+
+- debug:
+    var: check_group
+
 - name: Include CentOS8 tasks
-  include: centos8.yml
+  include_tasks: centos8.yml
   when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '8'
 
 - name: Include CentOS7 tasks
-  include: centos7.yml
+  include_tasks: centos7.yml
   when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
